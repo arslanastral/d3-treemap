@@ -48,9 +48,8 @@ const TreemapDiagram = () => {
 
   useEffect(() => {
     const svg = d3.select(TreemapDiagramRef.current);
-    const { width, height } = dimensions;
-
-    console.log(data);
+    const { width, height } =
+      dimensions || wrapperRef.current.getBoundingClientRect();
 
     return () => {};
   }, [data, dimensions]);
