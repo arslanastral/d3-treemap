@@ -38,7 +38,7 @@ const TreemapDiagramSvg = styled.svg`
   border-radius: 12px;
 `;
 
-const ChoroplethMap = () => {
+const TreemapDiagram = () => {
   const [data, setdata] = useState([]);
   const TreemapDiagramRef = useRef();
   const wrapperRef = useRef();
@@ -91,4 +91,4 @@ const useResizeObserver = (ref) => {
   return dimensions;
 };
 
-export default ChoroplethMap;
+export default TreemapDiagram;
