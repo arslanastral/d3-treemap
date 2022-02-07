@@ -55,6 +55,8 @@ const TreemapDiagram = () => {
       let group = d3.group(data, (d) => d.OriginalMedia);
 
       let hierarchy = d3.hierarchy(group);
+
+      d3.treemap().size([width, height]).padding(2)(hierarchy);
     }
 
     return () => {};
