@@ -44,16 +44,13 @@ const ChoroplethMap = () => {
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
   const dataURL =
-    "";
+    "https://gist.githubusercontent.com/arslanastral/3570f49c8ffa0731cbafc8560532927c/raw/ba4d0786c79da6fa2e25684704cdb2f2ccb6daca/100-top-grossing-media-franchises.csv";
 
   useEffect(() => {
     const svg = d3.select(TreemapDiagramRef.current);
-    const { width, height } = dimensions
+    const { width, height } = dimensions;
 
-   
-    return () => {
-     
-    };
+    return () => {};
   }, [data, dimensions]);
 
   useEffect(() => {
@@ -66,14 +63,11 @@ const ChoroplethMap = () => {
 
   return (
     <Wrapper>
-      <Title>
-      </Title>
+      <Title></Title>
 
       <TreemapDiagramContainer ref={wrapperRef}>
-        <TreemapDiagramSvg ref={TreemapDiagramRef}>
-        </TreemapDiagramSvg>
+        <TreemapDiagramSvg ref={TreemapDiagramRef}></TreemapDiagramSvg>
       </TreemapDiagramContainer>
-
     </Wrapper>
   );
 };
