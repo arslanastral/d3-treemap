@@ -51,6 +51,12 @@ const TreemapDiagram = () => {
     const { width, height } =
       dimensions || wrapperRef.current.getBoundingClientRect();
 
+    if (data.length) {
+      let group = d3.group(data, (d) => d.OriginalMedia);
+
+      let hierarchy = d3.hierarchy(group);
+    }
+
     return () => {};
   }, [data, dimensions]);
 
