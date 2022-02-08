@@ -77,6 +77,29 @@ const TreemapDiagram = () => {
       .attr("rx", "3px")
       .attr("ry", "3px")
       .attr("fill", (d) => color(d.data.OriginalMedia));
+
+    let blockTitle = svg
+      .selectAll("foreignObject")
+      .data(root.leaves())
+      .join("foreignObject")
+      .attr("x", function (d) {
+        return d.x0;
+      })
+      .attr("y", function (d) {
+        return d.y0;
+      })
+      .attr("width", (d) => d.x1 - d.x0)
+      .attr("height", (d) => d.y1 - d.y0)
+      .on("click", (e, d) => console.log(d))
+      .append("xhtml:div")
+      .attr("class", "block-title")
+      .html(function (d) {
+        return d.data.Franchise;
+      });
+
+    return () => {
+      blockTitle.remove();
+    };
   }, [data, dimensions]);
 
   useEffect(() => {
