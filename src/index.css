@@ -3,9 +3,8 @@ div.block-title {
   font-family: "Inter", sans-serif;
   font-weight: 300;
   color: white;
-  font-size: clamp(0.3rem, 10vw, 0.9rem);
+  font-size: clamp(0.6rem, 2vw, 0.9rem);
   line-height: 15px;
-
   margin: 4px 4px 4px 5px;
   /* overflow-wrap: break-word; */
 }
