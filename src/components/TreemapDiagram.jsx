@@ -17,9 +17,19 @@ const Title = styled.h1`
   animation: fadeInDown;
   animation-duration: 1s;
   font-family: Inter;
-  margin: 1rem 1rem 2rem 2rem;
+  margin: 1rem 1rem 1rem 2rem;
   line-height: 35px;
   font-size: clamp(2rem, 5vw, 2.8rem);
+`;
+
+const Subtitle = styled.p`
+  color: #414142;
+  animation: fadeIn;
+  animation-duration: 1s;
+  font-family: Inter;
+  text-align: center;
+  margin: 0rem 2rem 2rem 2rem;
+  font-size: clamp(1rem, 4vw, 1rem);
 `;
 
 const TreemapDiagramContainer = styled.div`
@@ -59,7 +69,26 @@ const TreemapDiagram = () => {
 
     let mediaTypes = [...new Set(data.map((d) => d.OriginalMedia))];
 
-    let color = d3.scaleOrdinal().domain(mediaTypes).range(d3.schemeCategory10);
+    let color = d3
+      .scaleOrdinal()
+      .domain(mediaTypes)
+      .range([
+        "#18c61a",
+        "#9817ff",
+        "#d31911",
+        "#24b7f1",
+        "#fa82ce",
+        "#736c31",
+        "#1263e2",
+        "#18c199",
+        "#ed990a",
+        "#f2917f",
+        "#ad4eb1",
+        "#2f9e8f",
+        "#a438c0",
+        "#802d50",
+        "#b4005a",
+      ]);
 
     const treemap = d3.treemap().size([width, height]).padding(1);
 
@@ -112,7 +141,8 @@ const TreemapDiagram = () => {
 
   return (
     <Wrapper>
-      <Title></Title>
+      <Title>Top 50 Highest-Grossing Media Franchises</Title>
+      <Subtitle>{`"Grouped by their original media form & sorted by highest revenue to lowest"`}</Subtitle>
 
       <TreemapDiagramContainer ref={wrapperRef}>
         <TreemapDiagramSvg ref={TreemapDiagramRef}></TreemapDiagramSvg>
