@@ -34,7 +34,6 @@ const TreemapDiagramSvg = styled.svg`
   height: 100%;
   animation: fadeIn;
   animation-duration: 1s;
-  background-color: #3784ff;
   border-radius: 12px;
 `;
 
@@ -44,22 +43,40 @@ const TreemapDiagram = () => {
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
   const dataURL =
-    "https://gist.githubusercontent.com/arslanastral/3570f49c8ffa0731cbafc8560532927c/raw/ba4d0786c79da6fa2e25684704cdb2f2ccb6daca/100-top-grossing-media-franchises.csv";
+    "https://gist.githubusercontent.com/arslanastral/3570f49c8ffa0731cbafc8560532927c/raw/434f9113c7aa6829da0de9853fe18e3743e4bb76/gistfile1.csv";
 
   useEffect(() => {
     const svg = d3.select(TreemapDiagramRef.current);
     const { width, height } =
       dimensions || wrapperRef.current.getBoundingClientRect();
 
-    if (data.length) {
-      let group = d3.group(data, (d) => d.OriginalMedia);
+    let group = d3.group(data, (d) => d.OriginalMedia);
 
-      let hierarchy = d3.hierarchy(group);
+    let hierarchy = d3
+      .hierarchy(group)
+      .sum((d) => d.RevenueBillionDollars)
+      .sort((a, b) => b.value - a.value);
 
-      d3.treemap().size([width, height]).padding(2)(hierarchy);
-    }
+    let mediaTypes = [...new Set(data.map((d) => d.OriginalMedia))];
 
-    return () => {};
+    let color = d3.scaleOrdinal().domain(mediaTypes).range(d3.schemeCategory10);
+
+    const treemap = d3.treemap().size([width, height]).padding(1);
+
+    const root = treemap(hierarchy);
+
+    svg
+      .selectAll(".blocks")
+      .data(root.leaves())
+      .join("rect")
+      .attr("class", "blocks")
+      .attr("x", (d) => d.x0)
+      .attr("y", (d) => d.y0)
+      .attr("width", (d) => d.x1 - d.x0)
+      .attr("height", (d) => d.y1 - d.y0)
+      .attr("rx", "3px")
+      .attr("ry", "3px")
+      .attr("fill", (d) => color(d.data.OriginalMedia));
   }, [data, dimensions]);
 
   useEffect(() => {
