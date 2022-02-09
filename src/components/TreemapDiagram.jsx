@@ -28,13 +28,13 @@ const Subtitle = styled.p`
   animation-duration: 1s;
   font-family: Inter;
   text-align: center;
-  margin: 0rem 2rem 2rem 2rem;
+  margin: 0rem 2rem 1rem 2rem;
   font-size: clamp(1rem, 4vw, 1rem);
 `;
 
 const TreemapDiagramContainer = styled.div`
-  border-radius: 10px;
   width: clamp(310px, 80vw, 1100px);
+  border-radius: 10px;
   height: 800px;
   margin-top: 1rem;
 `;
@@ -44,7 +44,6 @@ const TreemapDiagramSvg = styled.svg`
   height: 100%;
   animation: fadeIn;
   animation-duration: 1s;
-  border-radius: 12px;
 `;
 
 const TreemapDiagram = () => {
@@ -90,7 +89,12 @@ const TreemapDiagram = () => {
         "#b4005a",
       ]);
 
-    const treemap = d3.treemap().size([width, height]).padding(1);
+    const treemap = d3
+      .treemap()
+      .size([width, height])
+      .paddingTop(20)
+      .paddingRight(4)
+      .paddingInner(0.5);
 
     const root = treemap(hierarchy);
 
@@ -99,18 +103,42 @@ const TreemapDiagram = () => {
       .data(root.leaves())
       .join("rect")
       .attr("class", "blocks")
+      .transition()
       .attr("x", (d) => d.x0)
       .attr("y", (d) => d.y0)
+      // .attr("rx", "3px")
+      // .attr("ry", "3px")
       .attr("width", (d) => d.x1 - d.x0)
       .attr("height", (d) => d.y1 - d.y0)
-      .attr("rx", "3px")
-      .attr("ry", "3px")
       .attr("fill", (d) => color(d.data.OriginalMedia));
 
     let blockTitle = svg
       .selectAll("foreignObject")
       .data(root.leaves())
       .join("foreignObject")
+      .on("mouseover", function (event, d) {
+        d3.select(this).style("stroke", "blue");
+        div.transition().duration(200).style("opacity", 1);
+        div
+          .html(
+            `<span style="font-weight:600;font-size:1rem">${d.data.Franchise}</span>` +
+              " " +
+              `<span style="font-size:0.9rem">(${d.data.Year})</span>` +
+              "<br/>" +
+              `<span style="font-size:0.95rem">Revenue: $${d.data.RevenueBillionDollars} Billion</span>` +
+              "<br/>" +
+              `<span style="font-size:0.95rem">Original Media: ${d.data.OriginalMedia}</span>` +
+              "<br/>" +
+              `<span style="font-size:0.95rem">Owner: ${d.data.Owner}</span>`
+          )
+          .style("left", event.pageX - 20 + "px")
+          .style("top", event.pageY - 110 + "px");
+      })
+      .on("mouseout", function () {
+        d3.select(this).style("stroke", "none");
+        div.transition().duration(500).style("opacity", 0);
+      })
+
       .attr("x", function (d) {
         return d.x0;
       })
@@ -119,14 +147,26 @@ const TreemapDiagram = () => {
       })
       .attr("width", (d) => d.x1 - d.x0)
       .attr("height", (d) => d.y1 - d.y0)
-      .on("click", (e, d) => console.log(d))
       .append("xhtml:div")
       .attr("class", "block-title")
       .html(function (d) {
-        return d.data.Franchise;
+        return (
+          `<span class="block-title-name">${d.data.Franchise}</span>` +
+          "<br/>" +
+          `<span class="block-title-earnings">$${d.data.RevenueBillionDollars} Billion</span>`
+        );
       });
 
+    let div = d3
+      .select("body")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0)
+      .style("left", "0px")
+      .style("top", "0px");
+
     return () => {
+      div.remove();
       blockTitle.remove();
     };
   }, [data, dimensions]);
