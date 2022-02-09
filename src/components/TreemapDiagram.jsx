@@ -184,7 +184,7 @@ const TreemapDiagram = () => {
               "<br/>" +
               `<span style="font-size:0.95rem">Revenue: $${d.data.RevenueBillionDollars} Billion</span>` +
               "<br/>" +
-              `<span style="font-size:0.95rem">Original Media: ${d.data["Original Media"]}</span>` +
+              `<span style="font-size:0.95rem">Original Medium: ${d.data["Original Medium"]}</span>` +
               "<br/>" +
               `<span style="font-size:0.95rem">Owner: ${d.data.Owner}</span>`
           )
