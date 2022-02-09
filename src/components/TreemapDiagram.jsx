@@ -74,8 +74,6 @@ const TreemapDiagram = () => {
 
     let currentDataType = dataType[0].type;
 
-    console.log(currentDataType);
-
     let group = d3.group(data, (d) => d[currentDataType]);
 
     let hierarchy = d3
@@ -284,14 +282,13 @@ const TreemapDiagram = () => {
         .text(function (d) {
           return `${ranks.indexOf(d.data[0]) + 1}. ${d.data[0]}`;
         })
-        // .on("click", (e, d) => console.log(ranks.indexOf(d.data[0])))
 
         .attr("x", function (d) {
           return d.x0 + 4;
-        }) // +10 to adjust position (more right)
+        })
         .attr("y", function (d) {
           return d.y0 + 15;
-        }) // +20 to adjust position (lower)
+        })
         .attr("width", (d) => d.x1 - d.x0)
         .attr("height", (d) => d.y1 - d.y0);
     }
