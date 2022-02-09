@@ -35,6 +35,7 @@ const Subtitle = styled.p`
 const TreemapDiagramContainer = styled.div`
   width: clamp(310px, 80vw, 1100px);
   border-radius: 10px;
+  width: 90vw;
   height: 800px;
   margin-top: 1rem;
 `;
@@ -66,7 +67,7 @@ const TreemapDiagram = () => {
       .sum((d) => d.RevenueBillionDollars)
       .sort((a, b) => b.value - a.value);
 
-    let mediaTypes = [...new Set(data.map((d) => d.OriginalMedia))];
+    let mediaTypes = [...new Set(data.map((d) => d.Owner))];
 
     let color = d3
       .scaleOrdinal()
@@ -182,7 +183,7 @@ const TreemapDiagram = () => {
   return (
     <Wrapper>
       <Title>Top 50 Highest-Grossing Media Franchises</Title>
-      <Subtitle>{`"Grouped by their original media form & sorted by highest revenue to lowest"`}</Subtitle>
+      <Subtitle>{`"Grouped By Their Original Media Type, Ranked By Media Type's Total Revenue From All Sources & Sorted Individually by Highest Revenue to Lowest"`}</Subtitle>
 
       <TreemapDiagramContainer ref={wrapperRef}>
         <TreemapDiagramSvg ref={TreemapDiagramRef}></TreemapDiagramSvg>
