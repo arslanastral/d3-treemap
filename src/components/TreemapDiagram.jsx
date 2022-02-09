@@ -4,7 +4,7 @@ import Button from "./Button";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-  width: 90vw;
+  width: 97vw;
   height: 900px;
   border-radius: 20px;
   display: flex;
@@ -33,22 +33,11 @@ const Subtitle = styled.p`
   font-size: clamp(1rem, 4vw, 1rem);
 `;
 
-const SortTitle = styled.span`
-  font-size: 1rem;
-  color: #000000;
-  font-weight: bold;
-  animation: fadeIn;
-  animation-duration: 1s;
-  font-family: Inter;
-`;
-
-const ControlsContainer = styled.div`
-  /* margin-top: 80px; */
-`;
+const ControlsContainer = styled.div``;
 
 const TreemapDiagramContainer = styled.div`
   border-radius: 10px;
-  width: 90vw;
+  width: 97vw;
   height: 800px;
   margin-top: 1rem;
 `;
@@ -64,7 +53,7 @@ const TreemapDiagram = () => {
   const [data, setdata] = useState([]);
   const TreemapDiagramRef = useRef();
   const [dataGroupTypes, setdataGroupTypes] = useState([
-    { type: "OriginalMedia", isActive: true },
+    { type: "Original Medium", isActive: true },
     { type: "Owner", isActive: false },
   ]);
   const wrapperRef = useRef();
@@ -73,7 +62,7 @@ const TreemapDiagram = () => {
   // const legend = useRef();
   // const legendDimensions = useResizeObserver(legendContainerRef);
   const dataURL =
-    "https://gist.githubusercontent.com/arslanastral/3570f49c8ffa0731cbafc8560532927c/raw/434f9113c7aa6829da0de9853fe18e3743e4bb76/gistfile1.csv";
+    "https://gist.githubusercontent.com/arslanastral/3570f49c8ffa0731cbafc8560532927c/raw/1372a51076f733638604105a39fd2c158daddaa4/top-grossing-media-franchises.csv";
 
   useEffect(() => {
     const svg = d3.select(TreemapDiagramRef.current);
@@ -84,6 +73,8 @@ const TreemapDiagram = () => {
     let dataType = dataGroupTypes.filter((d) => d.isActive);
 
     let currentDataType = dataType[0].type;
+
+    console.log(currentDataType);
 
     let group = d3.group(data, (d) => d[currentDataType]);
 
@@ -287,9 +278,13 @@ const TreemapDiagram = () => {
       mediaTypeTitle = svg
         .selectAll("text")
         .data(root.children)
+
         .join("text")
-        // .on("click", (e, d) => console.log(ranks.indexOf(d.data[0])))
         .attr("class", "block-type-title")
+        .text(function (d) {
+          return `${ranks.indexOf(d.data[0]) + 1}. ${d.data[0]}`;
+        })
+        // .on("click", (e, d) => console.log(ranks.indexOf(d.data[0])))
 
         .attr("x", function (d) {
           return d.x0 + 4;
@@ -298,14 +293,7 @@ const TreemapDiagram = () => {
           return d.y0 + 15;
         }) // +20 to adjust position (lower)
         .attr("width", (d) => d.x1 - d.x0)
-        .attr("height", (d) => d.y1 - d.y0)
-        .text(function (d) {
-          return `${ranks.indexOf(d.data[0]) + 1}. ${d.data[0]
-            .toLowerCase()
-            .split(" ")
-            .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-            .join(" ")}`;
-        });
+        .attr("height", (d) => d.y1 - d.y0);
     }
 
     let blockTitle = svg
@@ -323,7 +311,7 @@ const TreemapDiagram = () => {
               "<br/>" +
               `<span style="font-size:0.95rem">Revenue: $${d.data.RevenueBillionDollars} Billion</span>` +
               "<br/>" +
-              `<span style="font-size:0.95rem">Original Media: ${d.data.OriginalMedia}</span>` +
+              `<span style="font-size:0.95rem">Original Media: ${d.data["Original Media"]}</span>` +
               "<br/>" +
               `<span style="font-size:0.95rem">Owner: ${d.data.Owner}</span>`
           )
@@ -380,11 +368,12 @@ const TreemapDiagram = () => {
 
   return (
     <Wrapper>
-      <Title>Top 50 Highest-Grossing Media Franchises</Title>
-      <Subtitle>{`"Grouped By Their Original Media Type, Ranked By Total Revenue From All Sources"`}</Subtitle>
+      <Title>Top 60 Highest-Grossing Media Franchises</Title>
+      <Subtitle key={dataGroupTypes}>{`Grouped By Their ${
+        dataGroupTypes.filter((d) => d.isActive)[0].type
+      }, Ranked By Total Revenue From All Sources`}</Subtitle>
 
       <ControlsContainer>
-        <SortTitle>Sort By</SortTitle>
         {dataGroupTypes.map((data, i) => (
           <Button
             isActive={data.isActive}
