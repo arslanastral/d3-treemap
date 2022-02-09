@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-  width: clamp(320px, 90vw, 1200px);
+  width: 90vw;
   height: 900px;
   border-radius: 20px;
   display: flex;
@@ -32,8 +32,21 @@ const Subtitle = styled.p`
   font-size: clamp(1rem, 4vw, 1rem);
 `;
 
+// const LegendContainer = styled.div`
+//   width: clamp(310px, 80vw, 600px);
+//   height: 30px;
+//   margin: 0rem 0 2rem 0rem;
+// `;
+
+// const LegendSvg = styled.svg`
+//   width: 100%;
+//   height: 100%;
+//   animation: fadeIn;
+//   animation-duration: 1s;
+//   overflow: visible !important;
+// `;
+
 const TreemapDiagramContainer = styled.div`
-  width: clamp(310px, 80vw, 1100px);
   border-radius: 10px;
   width: 90vw;
   height: 800px;
@@ -113,6 +126,32 @@ const TreemapDiagram = () => {
       .attr("height", (d) => d.y1 - d.y0)
       .attr("fill", (d) => color(d.data.OriginalMedia));
 
+    let mediaTypeTitle;
+    if (data.length) {
+      let ranks = root.children.map((d) => d.data[0]);
+      mediaTypeTitle = svg
+        .selectAll("text")
+        .data(root.children)
+        .join("text")
+        // .on("click", (e, d) => console.log(ranks.indexOf(d.data[0])))
+        .attr("class", "block-type-title")
+        .attr("x", function (d) {
+          return d.x0 + 4;
+        }) // +10 to adjust position (more right)
+        .attr("y", function (d) {
+          return d.y0 + 15;
+        }) // +20 to adjust position (lower)
+        .attr("width", (d) => d.x1 - d.x0)
+        .attr("height", (d) => d.y1 - d.y0)
+        .text(function (d) {
+          return `${ranks.indexOf(d.data[0]) + 1}. ${d.data[0]
+            .toLowerCase()
+            .split(" ")
+            .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(" ")}`;
+        });
+    }
+
     let blockTitle = svg
       .selectAll("foreignObject")
       .data(root.leaves())
@@ -169,6 +208,9 @@ const TreemapDiagram = () => {
     return () => {
       div.remove();
       blockTitle.remove();
+      if (data.length) {
+        mediaTypeTitle.remove();
+      }
     };
   }, [data, dimensions]);
 
@@ -184,6 +226,10 @@ const TreemapDiagram = () => {
     <Wrapper>
       <Title>Top 50 Highest-Grossing Media Franchises</Title>
       <Subtitle>{`"Grouped By Their Original Media Type, Ranked By Media Type's Total Revenue From All Sources & Sorted Individually by Highest Revenue to Lowest"`}</Subtitle>
+
+      {/* <LegendContainer ref={legendContainerRef}>
+        <LegendSvg ref={legend}></LegendSvg>
+      </LegendContainer> */}
 
       <TreemapDiagramContainer ref={wrapperRef}>
         <TreemapDiagramSvg ref={TreemapDiagramRef}></TreemapDiagramSvg>
