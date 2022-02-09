@@ -5,7 +5,7 @@ div.tooltip {
   text-align: left;
   font-family: Inter;
   line-height: 22px;
-  font-size: 1.1rem;
+  font-size: clamp(0.4rem, 0.5vw, 0.5rem);
   padding: 0.3rem 0.6rem;
   background: white;
   box-shadow: 0 2px 25px rgba(255, 0, 130, 0.5);
@@ -18,8 +18,8 @@ div.tooltip {
 div.block-title {
   font-family: "Inter", sans-serif;
   font-weight: 300;
-  /* animation: fadeIn;
-  animation-duration: 0.2s; */
+  animation: fadeIn;
+  animation-duration: 4s;
   color: rgb(255, 255, 255);
   font-size: clamp(0.6rem, 2vw, 0.9rem);
   line-height: 15px;
@@ -27,7 +27,7 @@ div.block-title {
 }
 
 div.block-title-earnings {
-  font-size: clamp(0.5rem, 1vw, 0.8rem);
+  font-size: clamp(0.4rem, 0.5vw, 0.5rem);
 }
 
 .block-type-title {

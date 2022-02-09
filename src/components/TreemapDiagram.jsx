@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
+import Button from "./Button";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -32,19 +33,18 @@ const Subtitle = styled.p`
   font-size: clamp(1rem, 4vw, 1rem);
 `;
 
-// const LegendContainer = styled.div`
-//   width: clamp(310px, 80vw, 600px);
-//   height: 30px;
-//   margin: 0rem 0 2rem 0rem;
-// `;
+const SortTitle = styled.span`
+  font-size: 1rem;
+  color: #000000;
+  font-weight: bold;
+  animation: fadeIn;
+  animation-duration: 1s;
+  font-family: Inter;
+`;
 
-// const LegendSvg = styled.svg`
-//   width: 100%;
-//   height: 100%;
-//   animation: fadeIn;
-//   animation-duration: 1s;
-//   overflow: visible !important;
-// `;
+const ControlsContainer = styled.div`
+  /* margin-top: 80px; */
+`;
 
 const TreemapDiagramContainer = styled.div`
   border-radius: 10px;
@@ -63,6 +63,10 @@ const TreemapDiagramSvg = styled.svg`
 const TreemapDiagram = () => {
   const [data, setdata] = useState([]);
   const TreemapDiagramRef = useRef();
+  const [dataGroupTypes, setdataGroupTypes] = useState([
+    { type: "OriginalMedia", isActive: true },
+    { type: "Owner", isActive: false },
+  ]);
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
   // const legendContainerRef = useRef();
@@ -77,14 +81,18 @@ const TreemapDiagram = () => {
     const { width, height } =
       dimensions || wrapperRef.current.getBoundingClientRect();
 
-    let group = d3.group(data, (d) => d.OriginalMedia);
+    let dataType = dataGroupTypes.filter((d) => d.isActive);
+
+    let currentDataType = dataType[0].type;
+
+    let group = d3.group(data, (d) => d[currentDataType]);
 
     let hierarchy = d3
       .hierarchy(group)
       .sum((d) => d.RevenueBillionDollars)
       .sort((a, b) => b.value - a.value);
 
-    let mediaTypes = [...new Set(data.map((d) => d.Owner))];
+    let mediaTypes = [...new Set(data.map((d) => d[currentDataType]))];
 
     let colors = [
       "#18c61a",
@@ -254,7 +262,7 @@ const TreemapDiagram = () => {
       .size([width, height])
       .paddingTop(20)
       .paddingRight(4)
-      .paddingInner(0.5);
+      .paddingInner(1);
 
     const root = treemap(hierarchy);
 
@@ -264,13 +272,14 @@ const TreemapDiagram = () => {
       .join("rect")
       .attr("class", "blocks")
       .transition()
+      .duration(1000)
       .attr("x", (d) => d.x0)
       .attr("y", (d) => d.y0)
       // .attr("rx", "3px")
       // .attr("ry", "3px")
       .attr("width", (d) => d.x1 - d.x0)
       .attr("height", (d) => d.y1 - d.y0)
-      .attr("fill", (d) => color(d.data.OriginalMedia));
+      .attr("fill", (d) => color(d.data[currentDataType]));
 
     let mediaTypeTitle;
     if (data.length) {
@@ -281,6 +290,7 @@ const TreemapDiagram = () => {
         .join("text")
         // .on("click", (e, d) => console.log(ranks.indexOf(d.data[0])))
         .attr("class", "block-type-title")
+
         .attr("x", function (d) {
           return d.x0 + 4;
         }) // +10 to adjust position (more right)
@@ -358,7 +368,7 @@ const TreemapDiagram = () => {
         mediaTypeTitle.remove();
       }
     };
-  }, [data, dimensions]);
+  }, [data, dimensions, dataGroupTypes]);
 
   useEffect(() => {
     d3.csv(dataURL, d3.autoType).then((data) => setdata(data));
@@ -371,11 +381,20 @@ const TreemapDiagram = () => {
   return (
     <Wrapper>
       <Title>Top 50 Highest-Grossing Media Franchises</Title>
-      <Subtitle>{`"Grouped By Their Original Media Type, Ranked By Media Type's Total Revenue From All Sources & Sorted Individually by Highest Revenue to Lowest"`}</Subtitle>
+      <Subtitle>{`"Grouped By Their Original Media Type, Ranked By Total Revenue From All Sources"`}</Subtitle>
 
-      {/* <LegendContainer ref={legendContainerRef}>
-        <LegendSvg ref={legend}></LegendSvg>
-      </LegendContainer> */}
+      <ControlsContainer>
+        <SortTitle>Sort By</SortTitle>
+        {dataGroupTypes.map((data, i) => (
+          <Button
+            isActive={data.isActive}
+            key={i}
+            type={data.type}
+            setdataGroupTypes={setdataGroupTypes}
+            dataGroupTypes={dataGroupTypes}
+          />
+        ))}
+      </ControlsContainer>
 
       <TreemapDiagramContainer ref={wrapperRef}>
         <TreemapDiagramSvg ref={TreemapDiagramRef}></TreemapDiagramSvg>
