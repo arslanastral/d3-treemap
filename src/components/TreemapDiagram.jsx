@@ -59,7 +59,7 @@ const TreemapDiagram = () => {
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
   const dataURL =
-    "https://gist.githubusercontent.com/arslanastral/3570f49c8ffa0731cbafc8560532927c/raw/2f3acceb0cc7562ee4c3474c396da2f18c63fce3/top-grossing-media-franchises.csv";
+    "https://gist.githubusercontent.com/arslanastral/3570f49c8ffa0731cbafc8560532927c/raw/799c7606ccc1d0a74e6b3041fb11df2e522626b6/top-grossing-media-franchises.csv";
 
   useEffect(() => {
     const svg = d3.select(TreemapDiagramRef.current);
