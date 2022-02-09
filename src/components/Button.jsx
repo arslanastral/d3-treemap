@@ -44,7 +44,7 @@ const Button = ({ type, isActive, setdataGroupTypes, dataGroupTypes }) => {
 
   return (
     <DataButton isActive={isActive} onClick={handleButtonClick}>
-      {type === "OriginalMedia" ? "By Original Media" : "By Owner"}
+      {type}
     </DataButton>
   );
 };

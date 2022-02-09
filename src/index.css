@@ -19,7 +19,8 @@ div.block-title {
   font-family: "Inter", sans-serif;
   font-weight: 300;
   animation: fadeIn;
-  animation-duration: 4s;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
   color: rgb(255, 255, 255);
   font-size: clamp(0.6rem, 2vw, 0.9rem);
   line-height: 15px;
@@ -34,5 +35,7 @@ div.block-title-earnings {
   font-family: "Inter", sans-serif;
   font-weight: 600;
   color: black;
+  animation: fadeIn;
+  animation-duration: 3s;
   font-size: clamp(0.6rem, 2vw, 0.9rem);
 }
